@@ -6,11 +6,51 @@
 				content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>Ajax Type Ahead</title>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 
+		<form class="search-form">
+			<input type="text" class="search" placeholder="City or State">
+			<ul class="suggestions">
+				<li>Filter for a city</li>
+				<li>or a state</li>
+			</ul>
+		</form>
+
+
+
+
 		<script>
 			const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+			// create new empty array
+			const cities = [];
+			// fetch returns promise
+			fetch(endpoint)
+				// convert promise raw data to json
+				.then(blob => blob.json())
+
+				// raw data can then be console.logged
+				// .then(data => console.log(data))
+
+				// push cities (an array within an array) with spread
+				.then(data => cities.push(...data));
+
+			// function filter cities array down to subset, find matches
+			function findMatches(wordToMatch, cities) {
+				return cities.filter(place => {
+					// here we need to figure out if the city or state matches what was searched
+					// need to put variable to regular expression first 'g' is global 'i' is case insensitive
+					const regex = new RegExp(wordToMatch, 'gi');
+					return place.city.match(regex) || place.state.match(regex);
+				});
+			}
+
+			// display matches function
+			function displayMatches() {
+				console.log(this.value);
+			}
 		</script>
 
 	</body>
