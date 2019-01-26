@@ -19,16 +19,16 @@
 		</form>
 
 
-
-
 		<script>
+			// ALWAY GET YOUR DATA FIRST THEN WORRY ABOUT HOOKING IT UP
+
 			const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
 			// create new empty array
 			const cities = [];
 			// fetch returns promise
 			fetch(endpoint)
-				// convert promise raw data to json
+			// convert promise raw data to json
 				.then(blob => blob.json())
 
 				// raw data can then be console.logged
@@ -49,8 +49,28 @@
 
 			// display matches function
 			function displayMatches() {
-				console.log(this.value);
+
+				const matchArray = findMatches(this.value, cities);
+				// loop over it
+				const html = matchArray.map(place => {
+					return `
+					<li>
+						<span class="name">${place.city}, ${place.state}</span>
+						<span class="population">${place.population}</span>
+					</li>
+					`;
+				}).join('');
+				suggestions.innerHTML = html;
 			}
+
+			// select input we are working with
+			const searchInput = document.querySelector('.search');
+			// select suggestions
+			const suggestions = document.querySelector('.suggestions');
+
+			// add an event listener on the search input form and when change/keyup run displayMatches
+			searchInput.addEventListener('change', displayMatches);
+			searchInput.addEventListener('keyup', displayMatches);
 		</script>
 
 	</body>
